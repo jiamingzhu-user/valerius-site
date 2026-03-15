@@ -155,6 +155,24 @@ function renderFeaturedPreview(container, product) {
   `;
 }
 
+function getUniqueCategories(products) {
+  return [...new Set(products.map((product) => (product.category || "").trim()).filter(Boolean))];
+}
+
+function parsePriceValue(priceText) {
+  if (!priceText) {
+    return null;
+  }
+
+  const numeric = String(priceText).replace(/[^0-9.]/g, "");
+  if (!numeric) {
+    return null;
+  }
+
+  const value = Number.parseFloat(numeric);
+  return Number.isFinite(value) ? value : null;
+}
+
 function fileToDataUrl(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();

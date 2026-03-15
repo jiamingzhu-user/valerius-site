@@ -365,6 +365,38 @@ h3 {
   gap: 16px;
 }
 
+.filters-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: end;
+  margin-bottom: 20px;
+  padding: 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.52);
+  border: 1px solid rgba(84, 51, 30, 0.08);
+}
+
+.filter-group {
+  display: grid;
+  gap: 8px;
+  min-width: 180px;
+}
+
+.filter-group label {
+  font-weight: 600;
+}
+
+.filter-group select {
+  width: 100%;
+  border-radius: 16px;
+  border: 1px solid rgba(84, 51, 30, 0.14);
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.82);
+  font: inherit;
+  color: var(--text);
+}
+
 .compact-form {
   margin-top: 12px;
 }
@@ -455,7 +487,8 @@ h3 {
   .section-heading,
   .admin-grid,
   .header-actions,
-  .architecture-grid {
+  .architecture-grid,
+  .filters-bar {
     grid-template-columns: 1fr;
     flex-direction: column;
   }
