@@ -204,6 +204,10 @@ h3 {
   padding: 24px;
 }
 
+.admin-hero {
+  padding-bottom: 18px;
+}
+
 .hero-card {
   background: linear-gradient(180deg, rgba(255, 248, 241, 0.92), rgba(239, 224, 211, 0.92));
   border-radius: 24px;
@@ -214,6 +218,24 @@ h3 {
 .featured-preview {
   display: grid;
   gap: 14px;
+}
+
+.admin-status-stack {
+  display: grid;
+  gap: 14px;
+}
+
+.status-card {
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(84, 51, 30, 0.08);
+}
+
+.status-card strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
 }
 
 .featured-preview-card {

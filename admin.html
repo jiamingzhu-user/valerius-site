@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valerius Admin</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero admin-hero">
+      <nav class="topbar">
+        <div>
+          <p class="eyebrow">&#x5546;&#x5BB6;&#x72EC;&#x7ACB;&#x540E;&#x53F0;</p>
+          <h1>Valerius Admin</h1>
+        </div>
+        <div class="header-actions">
+          <span id="syncBadge" class="sync-badge">&#x672C;&#x5730;&#x6F14;&#x793A;&#x6A21;&#x5F0F;</span>
+          <a class="contact-chip" href="index.html">&#x8FD4;&#x56DE;&#x524D;&#x53F0;</a>
+        </div>
+      </nav>
+
+      <section class="hero-grid">
+        <div class="hero-copy">
+          <p class="hero-tag">&#x8FD9;&#x91CC;&#x53EA;&#x7ED9;&#x4F60;&#x81EA;&#x5DF1;&#x7528;</p>
+          <h2>&#x767B;&#x5F55;&#x540E;&#x53F0;&#xFF0C;&#x5F55;&#x5165;&#x5546;&#x54C1;&#xFF0C;&#x524D;&#x53F0;&#x4F1A;&#x81EA;&#x52A8;&#x540C;&#x6B65;&#x3002;</h2>
+          <p class="hero-text">
+            &#x4EE5;&#x540E;&#x4F60;&#x5C31;&#x7528;&#x8FD9;&#x4E2A;&#x9875;&#x9762;&#x7BA1;&#x7406;&#x5546;&#x54C1;&#x3002;&#x5BA2;&#x6237;&#x770B;&#x4E0D;&#x5230;&#x8FD9;&#x4E2A;&#x5730;&#x65B9;&#xFF0C;&#x4F60;&#x53EA;&#x9700;&#x8981;&#x6536;&#x85CF; `admin.html` &#x8FD9;&#x4E2A;&#x5730;&#x5740;&#x5373;&#x53EF;&#x3002;
+          </p>
+        </div>
+        <aside class="hero-card">
+          <p class="card-label">&#x540E;&#x53F0;&#x72B6;&#x6001;</p>
+          <div class="admin-status-stack">
+            <div class="status-card">
+              <strong id="authStatus">&#x5C1A;&#x672A;&#x767B;&#x5F55;</strong>
+              <p id="backendHint" class="helper-text">&#x767B;&#x5F55;&#x540E;&#x53EF;&#x76F4;&#x63A5;&#x7BA1;&#x7406;&#x7EBF;&#x4E0A;&#x5546;&#x54C1;&#x3002;</p>
+            </div>
+            <div class="status-card">
+              <strong id="productCount">0</strong>
+              <p class="helper-text">&#x5F53;&#x524D;&#x5546;&#x54C1;&#x6570;&#x91CF;</p>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </header>
+
+    <main>
+      <section class="section-block admin-panel">
+        <div class="admin-grid">
+          <section class="auth-card">
+            <h4>&#x7BA1;&#x7406;&#x5458;&#x767B;&#x5F55;</h4>
+            <form id="authForm" class="product-form compact-form">
+              <div class="field">
+                <label for="adminEmail">&#x7BA1;&#x7406;&#x5458;&#x90AE;&#x7BB1;</label>
+                <input id="adminEmail" name="adminEmail" type="email" placeholder="you@example.com">
+              </div>
+              <div class="field">
+                <label for="adminPassword">&#x5BC6;&#x7801;</label>
+                <input id="adminPassword" name="adminPassword" type="password" placeholder="&#x8F93;&#x5165;&#x540E;&#x53F0;&#x5BC6;&#x7801;">
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="primary-btn">&#x767B;&#x5F55;&#x540E;&#x53F0;</button>
+                <button type="button" id="logoutButton" class="ghost-btn">&#x9000;&#x51FA;&#x767B;&#x5F55;</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="config-card">
+            <h4>&#x4F7F;&#x7528;&#x8BF4;&#x660E;</h4>
+            <ul class="steps-list">
+              <li>&#x6253;&#x5F00; `admin.html` &#x767B;&#x5F55;&#x5546;&#x5BB6;&#x8D26;&#x53F7;&#x3002;</li>
+              <li>&#x4E0A;&#x4F20;&#x5546;&#x54C1;&#x56FE;&#x3001;&#x4EF7;&#x683C;&#x3001;&#x63CF;&#x8FF0;&#x3001;&#x6807;&#x7B7E;&#x3002;</li>
+              <li>&#x4FDD;&#x5B58;&#x540E;&#xFF0C;&#x524D;&#x53F0; `index.html` &#x4F1A;&#x7ACB;&#x523B;&#x540C;&#x6B65;&#x65B0;&#x5546;&#x54C1;&#x3002;</li>
+            </ul>
+          </section>
+        </div>
+      </section>
+
+      <section class="section-block admin-panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">&#x5546;&#x54C1;&#x5F55;&#x5165;</p>
+            <h3>&#x65B0;&#x589E;&#x5546;&#x54C1;</h3>
+          </div>
+          <p class="section-note">&#x8FD9;&#x91CC;&#x53EA;&#x7ED9;&#x4F60;&#x7BA1;&#x7406;&#x5546;&#x54C1;&#xFF0C;&#x4E0D;&#x4F1A;&#x51FA;&#x73B0;&#x5728;&#x5BA2;&#x6237;&#x524D;&#x53F0;&#x3002;</p>
+        </div>
+
+        <form id="productForm" class="product-form">
+          <div class="field">
+            <label for="name">&#x5546;&#x54C1;&#x540D;&#x79F0;</label>
+            <input id="name" name="name" type="text" placeholder="&#x4F8B;&#x5982;&#xFF1A;Prada Re-Edition Mini Bag" required>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="price">&#x7279;&#x4EF7;</label>
+              <input id="price" name="price" type="text" placeholder="&#x4F8B;&#x5982;&#xFF1A;USD 899" required>
+            </div>
+            <div class="field">
+              <label for="originalPrice">&#x539F;&#x4EF7;</label>
+              <input id="originalPrice" name="originalPrice" type="text" placeholder="&#x4F8B;&#x5982;&#xFF1A;USD 1,050">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="category">&#x5206;&#x7C7B;</label>
+              <input id="category" name="category" type="text" placeholder="&#x4F8B;&#x5982;&#xFF1A;&#x624B;&#x888B; / &#x978B;&#x5C65; / &#x9996;&#x9970;">
+            </div>
+            <div class="field">
+              <label for="tag">&#x6807;&#x7B7E;</label>
+              <input id="tag" name="tag" type="text" placeholder="&#x4F8B;&#x5982;&#xFF1A;&#x7206;&#x6B3E; / &#x9650;&#x65F6; / &#x65B0;&#x5230;">
+            </div>
+          </div>
+          <div class="field">
+            <label for="description">&#x5546;&#x54C1;&#x63CF;&#x8FF0;</label>
+            <textarea id="description" name="description" rows="4" placeholder="&#x586B;&#x5199;&#x989C;&#x8272;&#x3001;&#x5C3A;&#x7801;&#x3001;&#x6E20;&#x9053;&#x3001;&#x5230;&#x8D27;&#x65F6;&#x95F4;&#x3001;&#x5E93;&#x5B58;&#x5907;&#x6CE8;&#x7B49;&#x4FE1;&#x606F;&#x3002;" required></textarea>
+          </div>
+          <div class="field">
+            <label for="image">&#x5546;&#x54C1;&#x56FE;&#x7247;</label>
+            <input id="image" name="image" type="file" accept="image/*">
+          </div>
+          <div class="field-row toggles">
+            <label class="toggle">
+              <input id="featured" name="featured" type="checkbox">
+              <span>&#x8BBE;&#x4E3A;&#x4ECA;&#x65E5;&#x7279;&#x4EF7;</span>
+            </label>
+            <label class="toggle">
+              <input id="inStock" name="inStock" type="checkbox" checked>
+              <span>&#x663E;&#x793A;&#x4E3A;&#x5728;&#x552E;</span>
+            </label>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="primary-btn">&#x4FDD;&#x5B58;&#x5546;&#x54C1;</button>
+            <button type="button" id="resetProducts" class="ghost-btn">&#x6062;&#x590D;&#x793A;&#x4F8B;&#x5546;&#x54C1;</button>
+          </div>
+          <p id="formMessage" class="helper-text"></p>
+        </form>
+      </section>
+
+      <section class="section-block catalog">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">&#x540E;&#x53F0;&#x9884;&#x89C8;</p>
+            <h3>&#x5DF2;&#x6709;&#x5546;&#x54C1;</h3>
+          </div>
+          <p class="section-note">&#x65B0;&#x589E;&#x7684;&#x5546;&#x54C1;&#x4F1A;&#x5728;&#x8FD9;&#x91CC;&#x540C;&#x6B65;&#x663E;&#x793A;&#xFF0C;&#x4F60;&#x4E5F;&#x53EF;&#x4EE5;&#x7528;&#x8FD9;&#x91CC;&#x68C0;&#x67E5;&#x524D;&#x53F0;&#x4F1A;&#x770B;&#x5230;&#x4EC0;&#x4E48;&#x3002;</p>
+        </div>
+        <div id="catalogGrid" class="product-grid"></div>
+      </section>
+    </main>
+  </div>
+
+  <template id="productCardTemplate">
+    <article class="product-card">
+      <div class="image-wrap">
+        <img alt="">
+      </div>
+      <div class="product-body">
+        <div class="product-meta">
+          <span class="category-pill"></span>
+          <span class="tag-pill"></span>
+        </div>
+        <h4 class="product-name"></h4>
+        <p class="product-description"></p>
+        <div class="price-row">
+          <span class="price-current"></span>
+          <span class="price-original"></span>
+        </div>
+        <div class="status-row">
+          <span class="status-pill"></span>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="shared.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
