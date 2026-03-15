@@ -369,7 +369,7 @@ h3 {
   display: flex;
   flex-wrap: wrap;
   gap: 14px;
-  align-items: end;
+  align-items: stretch;
   margin-bottom: 20px;
   padding: 16px;
   border-radius: 20px;
@@ -377,17 +377,23 @@ h3 {
   border: 1px solid rgba(84, 51, 30, 0.08);
 }
 
-.filter-group {
+.search-group,
+.filter-stack {
   display: grid;
   gap: 8px;
   min-width: 180px;
 }
 
-.filter-group label {
+.search-group {
+  flex: 1 1 240px;
+}
+
+.search-group label,
+.filter-label {
   font-weight: 600;
 }
 
-.filter-group select {
+.search-group input {
   width: 100%;
   border-radius: 16px;
   border: 1px solid rgba(84, 51, 30, 0.14);
@@ -395,6 +401,38 @@ h3 {
   background: rgba(255, 255, 255, 0.82);
   font: inherit;
   color: var(--text);
+}
+
+.filter-stack {
+  flex: 1 1 260px;
+}
+
+.filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pill-btn {
+  border: 1px solid rgba(84, 51, 30, 0.14);
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 10px 14px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 180ms ease, background 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+.pill-btn.is-active {
+  background: linear-gradient(135deg, var(--accent-deep), var(--accent));
+  color: #fff;
+  border-color: transparent;
+}
+
+.pill-btn:hover {
+  transform: translateY(-1px);
 }
 
 .compact-form {
