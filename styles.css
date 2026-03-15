@@ -61,7 +61,10 @@ img {
 .status-row,
 .field-row,
 .form-actions,
-.contact-grid {
+.contact-grid,
+.admin-grid,
+.header-actions,
+.architecture-grid {
   display: flex;
   gap: 16px;
 }
@@ -107,6 +110,7 @@ h3 {
 }
 
 .contact-chip,
+.sync-badge,
 .primary-btn,
 .secondary-btn,
 .ghost-btn,
@@ -117,6 +121,7 @@ h3 {
 }
 
 .contact-chip,
+.sync-badge,
 .secondary-btn,
 .ghost-btn {
   border: 1px solid var(--line);
@@ -125,6 +130,7 @@ h3 {
 }
 
 .contact-chip,
+.sync-badge,
 .secondary-btn,
 .ghost-btn,
 .primary-btn {
@@ -138,6 +144,15 @@ h3 {
   background: linear-gradient(135deg, var(--accent-deep), var(--accent));
   border: 0;
   cursor: pointer;
+}
+
+.header-actions {
+  align-items: center;
+}
+
+.sync-badge {
+  font-weight: 700;
+  color: var(--accent-deep);
 }
 
 .hero-grid {
@@ -184,7 +199,8 @@ h3 {
 .admin-panel,
 .contact-panel,
 .specials,
-.catalog {
+.catalog,
+.architecture-panel {
   padding: 24px;
 }
 
@@ -215,6 +231,28 @@ h3 {
 
 .section-block {
   margin-top: 24px;
+}
+
+.architecture-grid,
+.admin-grid {
+  flex-wrap: wrap;
+}
+
+.architecture-grid article,
+.auth-card,
+.config-card {
+  flex: 1 1 240px;
+  min-width: 0;
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(84, 51, 30, 0.08);
+}
+
+.architecture-grid h4,
+.auth-card h4,
+.config-card h4 {
+  margin-bottom: 8px;
 }
 
 .section-heading {
@@ -305,6 +343,10 @@ h3 {
   gap: 16px;
 }
 
+.compact-form {
+  margin-top: 12px;
+}
+
 .field {
   display: grid;
   gap: 8px;
@@ -350,6 +392,23 @@ h3 {
   border: 1px solid rgba(84, 51, 30, 0.08);
 }
 
+.helper-text {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.error-text {
+  color: #8c2e2e;
+}
+
+.steps-list {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
 .empty-state {
   padding: 26px;
   border-radius: 20px;
@@ -371,7 +430,10 @@ h3 {
   .product-grid,
   .contact-grid,
   .field-row,
-  .section-heading {
+  .section-heading,
+  .admin-grid,
+  .header-actions,
+  .architecture-grid {
     grid-template-columns: 1fr;
     flex-direction: column;
   }

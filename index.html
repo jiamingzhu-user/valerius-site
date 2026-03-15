@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,19 +14,23 @@
           <p class="eyebrow">Luxury Personal Shopping</p>
           <h1>Valerius</h1>
         </div>
-        <a class="contact-chip" href="#contact">VIP Contact</a>
+        <div class="header-actions">
+          <span id="syncBadge" class="sync-badge">Local demo mode</span>
+          <a class="contact-chip" href="#admin">Merchant Admin</a>
+        </div>
       </nav>
 
       <section class="hero-grid">
         <div class="hero-copy">
           <p class="hero-tag">Daily curated deals for your private VIP group</p>
-          <h2>把每天的特价商品，变成一个随时可分享的专属橱窗。</h2>
+          <h2>Turn daily specials into a real storefront you can operate online.</h2>
           <p class="hero-text">
-            你可以自己上传商品图片、描述、价格和标签，顾客打开链接就能看到最新特价，不需要每天在群里反复发长图。
+            This version is now structured for a real business setup: a public storefront for VIP customers,
+            plus an admin area that can connect to Supabase for shared products, images, and merchant login.
           </p>
           <div class="hero-actions">
-            <a class="primary-btn" href="#admin">上传今日特价</a>
-            <a class="secondary-btn" href="#catalog">查看商品展示</a>
+            <a class="primary-btn" href="#admin">Open Admin</a>
+            <a class="secondary-btn" href="#catalog">View Catalog</a>
           </div>
         </div>
 
@@ -38,13 +42,41 @@
     </header>
 
     <main>
+      <section class="section-block architecture-panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Formal Architecture</p>
+            <h3>Production Setup</h3>
+          </div>
+          <p class="section-note">The site now supports a safe upgrade path: public catalog on GitHub Pages, cloud data on Supabase, and fallback local demo mode while you finish setup.</p>
+        </div>
+        <div class="architecture-grid">
+          <article>
+            <h4>Storefront</h4>
+            <p>Keep the public site on GitHub Pages so VIP users can browse daily specials and product listings.</p>
+          </article>
+          <article>
+            <h4>Cloud Database</h4>
+            <p>Use Supabase to store product details, prices, tags, and inventory state.</p>
+          </article>
+          <article>
+            <h4>Image Storage</h4>
+            <p>Upload product photos to Supabase Storage so images are not tied to one browser or one device.</p>
+          </article>
+          <article>
+            <h4>Merchant Login</h4>
+            <p>Use Supabase Auth so only your approved merchant account can add products to the live site.</p>
+          </article>
+        </div>
+      </section>
+
       <section class="section-block specials" id="catalog">
         <div class="section-heading">
           <div>
             <p class="eyebrow">VIP Special Picks</p>
-            <h3>今日特价</h3>
+            <h3>Daily Specials</h3>
           </div>
-          <p class="section-note">把你最想推广的商品标记为“今日特价”，这里会自动突出显示。</p>
+          <p class="section-note">Flag any item as featured and it will be promoted here automatically.</p>
         </div>
         <div id="specialsGrid" class="product-grid"></div>
       </section>
@@ -53,9 +85,9 @@
         <div class="section-heading">
           <div>
             <p class="eyebrow">Curated Catalog</p>
-            <h3>全部商品</h3>
+            <h3>All Products</h3>
           </div>
-          <p class="section-note">适合长期展示库存、爆款、回购款和新品预告。</p>
+          <p class="section-note">Use this section for evergreen stock, best sellers, repeat favorites, and new arrivals.</p>
         </div>
         <div id="catalogGrid" class="product-grid"></div>
       </section>
@@ -64,64 +96,96 @@
         <div class="section-heading">
           <div>
             <p class="eyebrow">Merchant Studio</p>
-            <h3>商品录入区</h3>
+            <h3>Product Admin</h3>
           </div>
-          <p class="section-note">这个原型先把数据保存在当前浏览器里，后续可以升级成真正后台。</p>
+          <p class="section-note">Once Supabase is connected this becomes your real admin panel. Until then it still works in local demo mode.</p>
+        </div>
+
+        <div class="admin-grid">
+          <section class="auth-card">
+            <h4>Admin Login</h4>
+            <p id="authStatus" class="helper-text">Supabase is not configured yet. The site is still running in local demo mode.</p>
+            <form id="authForm" class="product-form compact-form">
+              <div class="field">
+                <label for="adminEmail">Admin email</label>
+                <input id="adminEmail" name="adminEmail" type="email" placeholder="you@example.com">
+              </div>
+              <div class="field">
+                <label for="adminPassword">Password</label>
+                <input id="adminPassword" name="adminPassword" type="password" placeholder="Enter admin password">
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="primary-btn">Sign In</button>
+                <button type="button" id="logoutButton" class="ghost-btn">Sign Out</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="config-card">
+            <h4>Setup Checklist</h4>
+            <ul class="steps-list">
+              <li>Create a Supabase project and run the SQL from `supabase-schema.sql`.</li>
+              <li>Put your project URL and anon key into `config.js`.</li>
+              <li>Create your admin user in Supabase Auth and sign in here.</li>
+            </ul>
+            <p class="helper-text">Full step-by-step instructions are in `FORMAL_SETUP.md`.</p>
+          </section>
         </div>
 
         <form id="productForm" class="product-form">
           <div class="field">
-            <label for="name">商品名称</label>
-            <input id="name" name="name" type="text" placeholder="例如：Prada Re-Edition Mini Bag" required>
+            <label for="name">Product name</label>
+            <input id="name" name="name" type="text" placeholder="Example: Prada Re-Edition Mini Bag" required>
           </div>
 
           <div class="field-row">
             <div class="field">
-              <label for="price">特价</label>
-              <input id="price" name="price" type="text" placeholder="例如：¥6,899" required>
+              <label for="price">Sale price</label>
+              <input id="price" name="price" type="text" placeholder="Example: USD 899" required>
             </div>
             <div class="field">
-              <label for="originalPrice">原价</label>
-              <input id="originalPrice" name="originalPrice" type="text" placeholder="例如：¥8,300">
+              <label for="originalPrice">Original price</label>
+              <input id="originalPrice" name="originalPrice" type="text" placeholder="Example: USD 1,050">
             </div>
           </div>
 
           <div class="field-row">
             <div class="field">
-              <label for="category">分类</label>
-              <input id="category" name="category" type="text" placeholder="例如：手袋 / 鞋履 / 首饰">
+              <label for="category">Category</label>
+              <input id="category" name="category" type="text" placeholder="Example: Bags / Shoes / Jewelry">
             </div>
             <div class="field">
-              <label for="tag">标签</label>
-              <input id="tag" name="tag" type="text" placeholder="例如：爆款 / 限时 / 新到">
+              <label for="tag">Tag</label>
+              <input id="tag" name="tag" type="text" placeholder="Example: Bestseller / Flash / New">
             </div>
           </div>
 
           <div class="field">
-            <label for="description">商品描述</label>
-            <textarea id="description" name="description" rows="4" placeholder="写上颜色、尺寸、购入渠道、是否现货等信息" required></textarea>
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="4" placeholder="Add color, size, source, lead time, stock notes, and shipping details." required></textarea>
           </div>
 
           <div class="field">
-            <label for="image">商品图片</label>
+            <label for="image">Product image</label>
             <input id="image" name="image" type="file" accept="image/*">
           </div>
 
           <div class="field-row toggles">
             <label class="toggle">
               <input id="featured" name="featured" type="checkbox">
-              <span>设为今日特价</span>
+              <span>Mark as daily special</span>
             </label>
             <label class="toggle">
               <input id="inStock" name="inStock" type="checkbox" checked>
-              <span>显示为在售</span>
+              <span>Show as in stock</span>
             </label>
           </div>
 
           <div class="form-actions">
-            <button type="submit" class="primary-btn">保存商品</button>
-            <button type="button" id="resetProducts" class="ghost-btn">恢复示例商品</button>
+            <button type="submit" class="primary-btn">Save Product</button>
+            <button type="button" id="resetProducts" class="ghost-btn">Restore Demo Items</button>
           </div>
+          <p id="formMessage" class="helper-text"></p>
         </form>
       </section>
 
@@ -129,21 +193,21 @@
         <div class="section-heading">
           <div>
             <p class="eyebrow">Order Flow</p>
-            <h3>下单方式建议</h3>
+            <h3>Suggested Order Flow</h3>
           </div>
         </div>
         <div class="contact-grid">
           <article>
-            <h4>第一步</h4>
-            <p>顾客在网页中看商品，选中后点击联系你。</p>
+            <h4>Step 1</h4>
+            <p>VIP customers browse the site and pick the product they want.</p>
           </article>
           <article>
-            <h4>第二步</h4>
-            <p>你在微信里确认库存、颜色、尺码和到货周期。</p>
+            <h4>Step 2</h4>
+            <p>You confirm stock, color, size, delivery timing, and sourcing details in WeChat.</p>
           </article>
           <article>
-            <h4>第三步</h4>
-            <p>成交后再引导付款。这样最适合代购和VIP私域模式。</p>
+            <h4>Step 3</h4>
+            <p>You complete the sale privately after confirmation. This fits a concierge-style reselling workflow well.</p>
           </article>
         </div>
       </section>
@@ -168,12 +232,14 @@
         </div>
         <div class="status-row">
           <span class="status-pill"></span>
-          <a class="contact-link" href="#contact">联系下单</a>
+          <a class="contact-link" href="#contact">Contact to Order</a>
         </div>
       </div>
     </article>
   </template>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
