@@ -7,9 +7,9 @@ const sampleProducts = [
     name: "Prada Re-Edition Mini Bag",
     price: "USD 899",
     originalPrice: "USD 1,050",
-    category: "Bags",
-    tag: "Bestseller",
-    description: "Black nylon mini bag with leather trim. One ready-to-ship unit available today.",
+    category: "\u624b\u888b",
+    tag: "\u7206\u6b3e",
+    description: "\u9ed1\u8272\u5c3c\u9f99\u914d\u76ae\u8fb9\u8ff7\u4f60\u624b\u888b\uff0c\u5f53\u5929\u53ef\u786e\u8ba4\u73b0\u8d27\u3002",
     featured: true,
     inStock: true,
     image: createPlaceholderImage("Valerius", "Prada Re-Edition"),
@@ -19,9 +19,9 @@ const sampleProducts = [
     name: "Golden Goose Super-Star",
     price: "USD 336",
     originalPrice: "USD 410",
-    category: "Shoes",
-    tag: "Flash",
-    description: "Classic distressed sneaker. Good fit for a daily special push and VIP group highlight.",
+    category: "\u978b\u5c65",
+    tag: "\u9650\u65f6",
+    description: "\u7ecf\u5178\u505a\u65e7\u5c0f\u810f\u978b\uff0c\u5f88\u9002\u5408\u505a\u4eca\u65e5\u7279\u4ef7\u4e3b\u63a8\u3002",
     featured: true,
     inStock: true,
     image: createPlaceholderImage("Valerius", "Golden Goose"),
@@ -31,9 +31,9 @@ const sampleProducts = [
     name: "Cartier Love Bracelet",
     price: "USD 4,120",
     originalPrice: "",
-    category: "Jewelry",
-    tag: "New",
-    description: "Rose gold classic bracelet. Ideal for higher-ticket VIP clients and sourcing-on-request.",
+    category: "\u9996\u9970",
+    tag: "\u65b0\u5230",
+    description: "\u7c89\u91d1\u8272\u7ecf\u5178\u624b\u73af\uff0c\u9002\u5408\u9ad8\u5ba2\u5355 VIP \u5ba2\u6237\u3002",
     featured: false,
     inStock: false,
     image: createPlaceholderImage("Valerius", "Cartier Love"),
@@ -63,7 +63,7 @@ let currentSession = null;
 
 bootstrap().catch((error) => {
   console.error(error);
-  setFormMessage("Initialization failed. Switched back to local demo mode.", true);
+  setFormMessage("\u521d\u59cb\u5316\u5931\u8d25\uff0c\u5df2\u5207\u56de\u672c\u5730\u6f14\u793a\u6a21\u5f0f\u3002", true);
   startLocalMode();
 });
 
@@ -73,13 +73,13 @@ async function bootstrap() {
     return;
   }
 
-  syncBadge.textContent = "Cloud mode configured";
-  authStatus.textContent = "Checking admin session.";
+  syncBadge.textContent = "\u5df2\u8fde\u63a5\u4e91\u7aef";
+  authStatus.textContent = "\u6b63\u5728\u68c0\u67e5\u7ba1\u7406\u5458\u767b\u5f55\u72b6\u6001\u3002";
 
   const { data, error } = await supabaseClient.auth.getSession();
   if (error) {
     console.error(error);
-    authStatus.textContent = "Cloud mode is connected, but no admin is signed in.";
+    authStatus.textContent = "\u4e91\u7aef\u5df2\u8fde\u63a5\uff0c\u4f46\u5f53\u524d\u8fd8\u6ca1\u6709\u7ba1\u7406\u5458\u767b\u5f55\u3002";
   } else {
     currentSession = data.session;
     persistSessionState(Boolean(currentSession));
@@ -90,11 +90,11 @@ async function bootstrap() {
 }
 
 function startLocalMode() {
-  syncBadge.textContent = "Local demo mode";
-  authStatus.textContent = "Supabase is not configured yet. The site is still running in local demo mode.";
+  syncBadge.textContent = "\u672c\u5730\u6f14\u793a\u6a21\u5f0f";
+  authStatus.textContent = "Supabase \u8fd8\u6ca1\u6709\u914d\u7f6e\u5b8c\u6210\uff0c\u5f53\u524d\u4ecd\u662f\u672c\u5730\u6f14\u793a\u6a21\u5f0f\u3002";
   products = loadProductsFromLocal();
   renderProducts();
-  setFormMessage("Products currently save only inside this browser.", false);
+  setFormMessage("\u73b0\u5728\u65b0\u589e\u7684\u5546\u54c1\u53ea\u4f1a\u4fdd\u5b58\u5728\u5f53\u524d\u6d4f\u89c8\u5668\u91cc\u3002", false);
   persistSessionState(false);
   updateAuthUi();
 }
@@ -132,8 +132,8 @@ productForm.addEventListener("submit", async (event) => {
     name: formData.get("name").toString().trim(),
     price: formData.get("price").toString().trim(),
     originalPrice: formData.get("originalPrice").toString().trim(),
-    category: formData.get("category").toString().trim() || "Featured",
-    tag: formData.get("tag").toString().trim() || "Recommended",
+    category: formData.get("category").toString().trim() || "\u7cbe\u9009",
+    tag: formData.get("tag").toString().trim() || "\u63a8\u8350",
     description: formData.get("description").toString().trim(),
     featured: formData.get("featured") === "on",
     inStock: formData.get("inStock") === "on",
@@ -142,7 +142,7 @@ productForm.addEventListener("submit", async (event) => {
 
   if (supabaseClient) {
     if (!currentSession) {
-      setFormMessage("Please sign in first before saving products to the live cloud database.", true);
+      setFormMessage("\u8bf7\u5148\u767b\u5f55\u7ba1\u7406\u5458\u8d26\u53f7\uff0c\u518d\u628a\u5546\u54c1\u4fdd\u5b58\u5230\u4e91\u7aef\u3002", true);
       return;
     }
 
@@ -152,7 +152,7 @@ productForm.addEventListener("submit", async (event) => {
         imageUrl = await uploadImageToSupabase(imageFile);
       } catch (error) {
         console.error(error);
-        setFormMessage("Image upload failed. Check Supabase storage bucket permissions.", true);
+        setFormMessage("\u56fe\u7247\u4e0a\u4f20\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5 Supabase Storage \u6876\u6743\u9650\u662f\u5426\u6b63\u786e\u3002", true);
         return;
       }
     }
@@ -173,11 +173,11 @@ productForm.addEventListener("submit", async (event) => {
     const { error } = await supabaseClient.from("products").insert(payload);
     if (error) {
       console.error(error);
-      setFormMessage("Cloud save failed. Check your table and policy setup.", true);
+      setFormMessage("\u4e91\u7aef\u4fdd\u5b58\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5\u6570\u636e\u8868\u548c\u6743\u9650\u914d\u7f6e\u3002", true);
       return;
     }
 
-    setFormMessage("Product saved to the live cloud catalog.", false);
+    setFormMessage("\u5546\u54c1\u5df2\u4fdd\u5b58\u5230\u4e91\u7aef\uff0c\u8bbf\u5ba2\u73b0\u5728\u53ef\u4ee5\u770b\u5230\u6700\u65b0\u5185\u5bb9\u3002", false);
     productForm.reset();
     await refreshProducts();
     return;
@@ -187,14 +187,14 @@ productForm.addEventListener("submit", async (event) => {
   saveProductsToLocal(products);
   renderProducts();
   productForm.reset();
-  setFormMessage("Product saved inside this browser only.", false);
+  setFormMessage("\u5546\u54c1\u5df2\u4fdd\u5b58\u5728\u5f53\u524d\u6d4f\u89c8\u5668\u4e2d\u3002", false);
 });
 
 authForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   if (!supabaseClient) {
-    setFormMessage("Supabase is not configured yet, so live admin login is unavailable.", true);
+    setFormMessage("Supabase \u8fd8\u6ca1\u6709\u914d\u7f6e\u5b8c\u6210\uff0c\u6682\u65f6\u65e0\u6cd5\u767b\u5f55\u6b63\u5f0f\u540e\u53f0\u3002", true);
     return;
   }
 
@@ -203,14 +203,14 @@ authForm.addEventListener("submit", async (event) => {
   const password = formData.get("adminPassword").toString();
 
   if (!email || !password) {
-    authStatus.textContent = "Enter both admin email and password.";
+    authStatus.textContent = "\u8bf7\u8f93\u5165\u7ba1\u7406\u5458\u90ae\u7bb1\u548c\u5bc6\u7801\u3002";
     return;
   }
 
   const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
   if (error) {
     console.error(error);
-    authStatus.textContent = "Sign-in failed. Check the admin account inside Supabase Auth.";
+    authStatus.textContent = "\u767b\u5f55\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5 Supabase Auth \u91cc\u7684\u8d26\u53f7\u548c\u5bc6\u7801\u3002";
     return;
   }
 
@@ -223,7 +223,7 @@ authForm.addEventListener("submit", async (event) => {
 
 logoutButton.addEventListener("click", async () => {
   if (!supabaseClient) {
-    authStatus.textContent = "Local demo mode does not need sign-out.";
+    authStatus.textContent = "\u672c\u5730\u6f14\u793a\u6a21\u5f0f\u4e0d\u9700\u8981\u9000\u51fa\u767b\u5f55\u3002";
     return;
   }
 
@@ -235,14 +235,14 @@ logoutButton.addEventListener("click", async () => {
 
 resetButton.addEventListener("click", async () => {
   if (supabaseClient) {
-    setFormMessage("Reset is limited to demo mode. Do not bulk-reset a live cloud catalog from the storefront.", true);
+    setFormMessage("\u6062\u590d\u793a\u4f8b\u5546\u54c1\u53ea\u9002\u7528\u4e8e\u672c\u5730\u6f14\u793a\u6a21\u5f0f\u3002", true);
     return;
   }
 
   products = [...sampleProducts];
   saveProductsToLocal(products);
   renderProducts();
-  setFormMessage("Demo products restored.", false);
+  setFormMessage("\u793a\u4f8b\u5546\u54c1\u5df2\u6062\u590d\u3002", false);
 });
 
 function updateAuthUi() {
@@ -253,8 +253,8 @@ function updateAuthUi() {
 
   logoutButton.disabled = !currentSession;
   authStatus.textContent = currentSession
-    ? `Signed in as ${currentSession.user.email}`
-    : "Cloud mode is ready. Sign in with your merchant account.";
+    ? `\u5df2\u767b\u5f55\uff1a${currentSession.user.email}`
+    : "\u4e91\u7aef\u5df2\u51c6\u5907\u597d\uff0c\u8bf7\u4f7f\u7528\u5546\u5bb6\u8d26\u53f7\u767b\u5f55\u3002";
 }
 
 function loadProductsFromLocal() {
@@ -282,8 +282,8 @@ function persistSessionState(isLoggedIn) {
 
 function renderProducts() {
   const featuredProducts = products.filter((product) => product.featured);
-  renderGrid(specialsGrid, featuredProducts, "No featured products yet. Add one from the admin form below.");
-  renderGrid(catalogGrid, products, "No products are available yet.");
+  renderGrid(specialsGrid, featuredProducts, "\u8FD8\u6CA1\u6709\u8BBE\u7F6E\u201C\u4ECA\u65E5\u7279\u4EF7\u201D\u5546\u54C1\u3002");
+  renderGrid(catalogGrid, products, "\u6682\u65F6\u8FD8\u6CA1\u6709\u5546\u54C1\u3002");
   renderFeaturedPreview(featuredProducts[0] || products[0]);
 }
 
@@ -311,14 +311,14 @@ function renderGrid(container, items, emptyText) {
     originalPriceEl.textContent = product.originalPrice;
     originalPriceEl.style.display = product.originalPrice ? "inline" : "none";
 
-    card.querySelector(".status-pill").textContent = product.inStock ? "In stock" : "Source on request";
+    card.querySelector(".status-pill").textContent = product.inStock ? "\u5728\u552E\u4E2D" : "\u53EF\u4EE3\u627E / \u9700\u786E\u8BA4";
     container.appendChild(card);
   });
 }
 
 function renderFeaturedPreview(product) {
   if (!product) {
-    featuredPreview.innerHTML = '<div class="empty-state">Add one product and your main featured item will appear here.</div>';
+    featuredPreview.innerHTML = '<div class="empty-state">\u5148\u65B0\u589E\u4E00\u4EF6\u5546\u54C1\uFF0C\u8FD9\u91CC\u4F1A\u81EA\u52A8\u663E\u793A\u4F60\u7684\u4E3B\u63A8\u5546\u54C1\u3002</div>';
     return;
   }
 
@@ -362,8 +362,8 @@ function mapRemoteProduct(row) {
     name: row.name,
     price: row.price,
     originalPrice: row.original_price || "",
-    category: row.category || "Featured",
-    tag: row.tag || "Recommended",
+    category: row.category || "\u7CBE\u9009",
+    tag: row.tag || "\u63A8\u8350",
     description: row.description,
     featured: Boolean(row.featured),
     inStock: Boolean(row.in_stock),
