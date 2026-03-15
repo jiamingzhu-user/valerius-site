@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valerius | VIP Daily Specials</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <nav class="topbar">
+        <div>
+          <p class="eyebrow">Luxury Personal Shopping</p>
+          <h1>Valerius</h1>
+        </div>
+        <a class="contact-chip" href="#contact">VIP Contact</a>
+      </nav>
+
+      <section class="hero-grid">
+        <div class="hero-copy">
+          <p class="hero-tag">Daily curated deals for your private VIP group</p>
+          <h2>把每天的特价商品，变成一个随时可分享的专属橱窗。</h2>
+          <p class="hero-text">
+            你可以自己上传商品图片、描述、价格和标签，顾客打开链接就能看到最新特价，不需要每天在群里反复发长图。
+          </p>
+          <div class="hero-actions">
+            <a class="primary-btn" href="#admin">上传今日特价</a>
+            <a class="secondary-btn" href="#catalog">查看商品展示</a>
+          </div>
+        </div>
+
+        <aside class="hero-card">
+          <p class="card-label">Today at Valerius</p>
+          <div id="featuredPreview" class="featured-preview"></div>
+        </aside>
+      </section>
+    </header>
+
+    <main>
+      <section class="section-block specials" id="catalog">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">VIP Special Picks</p>
+            <h3>今日特价</h3>
+          </div>
+          <p class="section-note">把你最想推广的商品标记为“今日特价”，这里会自动突出显示。</p>
+        </div>
+        <div id="specialsGrid" class="product-grid"></div>
+      </section>
+
+      <section class="section-block catalog">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Curated Catalog</p>
+            <h3>全部商品</h3>
+          </div>
+          <p class="section-note">适合长期展示库存、爆款、回购款和新品预告。</p>
+        </div>
+        <div id="catalogGrid" class="product-grid"></div>
+      </section>
+
+      <section class="section-block admin-panel" id="admin">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Merchant Studio</p>
+            <h3>商品录入区</h3>
+          </div>
+          <p class="section-note">这个原型先把数据保存在当前浏览器里，后续可以升级成真正后台。</p>
+        </div>
+
+        <form id="productForm" class="product-form">
+          <div class="field">
+            <label for="name">商品名称</label>
+            <input id="name" name="name" type="text" placeholder="例如：Prada Re-Edition Mini Bag" required>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="price">特价</label>
+              <input id="price" name="price" type="text" placeholder="例如：¥6,899" required>
+            </div>
+            <div class="field">
+              <label for="originalPrice">原价</label>
+              <input id="originalPrice" name="originalPrice" type="text" placeholder="例如：¥8,300">
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="category">分类</label>
+              <input id="category" name="category" type="text" placeholder="例如：手袋 / 鞋履 / 首饰">
+            </div>
+            <div class="field">
+              <label for="tag">标签</label>
+              <input id="tag" name="tag" type="text" placeholder="例如：爆款 / 限时 / 新到">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="description">商品描述</label>
+            <textarea id="description" name="description" rows="4" placeholder="写上颜色、尺寸、购入渠道、是否现货等信息" required></textarea>
+          </div>
+
+          <div class="field">
+            <label for="image">商品图片</label>
+            <input id="image" name="image" type="file" accept="image/*">
+          </div>
+
+          <div class="field-row toggles">
+            <label class="toggle">
+              <input id="featured" name="featured" type="checkbox">
+              <span>设为今日特价</span>
+            </label>
+            <label class="toggle">
+              <input id="inStock" name="inStock" type="checkbox" checked>
+              <span>显示为在售</span>
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="primary-btn">保存商品</button>
+            <button type="button" id="resetProducts" class="ghost-btn">恢复示例商品</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="section-block contact-panel" id="contact">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Order Flow</p>
+            <h3>下单方式建议</h3>
+          </div>
+        </div>
+        <div class="contact-grid">
+          <article>
+            <h4>第一步</h4>
+            <p>顾客在网页中看商品，选中后点击联系你。</p>
+          </article>
+          <article>
+            <h4>第二步</h4>
+            <p>你在微信里确认库存、颜色、尺码和到货周期。</p>
+          </article>
+          <article>
+            <h4>第三步</h4>
+            <p>成交后再引导付款。这样最适合代购和VIP私域模式。</p>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <template id="productCardTemplate">
+    <article class="product-card">
+      <div class="image-wrap">
+        <img alt="">
+      </div>
+      <div class="product-body">
+        <div class="product-meta">
+          <span class="category-pill"></span>
+          <span class="tag-pill"></span>
+        </div>
+        <h4 class="product-name"></h4>
+        <p class="product-description"></p>
+        <div class="price-row">
+          <span class="price-current"></span>
+          <span class="price-original"></span>
+        </div>
+        <div class="status-row">
+          <span class="status-pill"></span>
+          <a class="contact-link" href="#contact">联系下单</a>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
