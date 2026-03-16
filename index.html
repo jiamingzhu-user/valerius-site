@@ -16,6 +16,10 @@
         </div>
         <div class="header-actions">
           <span id="syncBadge" class="sync-badge">&#x7CBE;&#x9009;&#x66F4;&#x65B0;&#x4E2D;</span>
+          <button id="cartButton" type="button" class="contact-chip cart-trigger">
+            &#x8D2D;&#x7269;&#x8F66;
+            <span id="cartCount" class="cart-count">0</span>
+          </button>
           <a class="contact-chip" href="#contact">&#x8054;&#x7CFB;&#x4E0B;&#x5355;</a>
         </div>
       </nav>
@@ -94,6 +98,16 @@
             <input id="searchInput" type="text" placeholder="&#x8F93;&#x5165;&#x5546;&#x54C1;&#x540D;&#x79F0;&#x6216;&#x5173;&#x952E;&#x5B57;">
           </div>
           <div class="filter-stack">
+            <span class="filter-label">&#x5FEB;&#x6377;&#x7B5B;&#x9009;</span>
+            <div id="quickPills" class="filter-pills">
+              <button type="button" class="pill-btn is-active" data-quick="all">&#x5168;&#x90E8;</button>
+              <button type="button" class="pill-btn" data-quick="in-stock">&#x73B0;&#x8D27;</button>
+              <button type="button" class="pill-btn" data-quick="featured">&#x4ECA;&#x65E5;&#x4E3B;&#x63A8;</button>
+              <button type="button" class="pill-btn" data-quick="new">&#x65B0;&#x5230;</button>
+              <button type="button" class="pill-btn" data-quick="hot">&#x7206;&#x6B3E;</button>
+            </div>
+          </div>
+          <div class="filter-stack">
             <span class="filter-label">&#x5206;&#x7C7B;</span>
             <div id="categoryPills" class="filter-pills"></div>
           </div>
@@ -141,6 +155,9 @@
     <article class="product-card">
       <div class="image-wrap">
         <img alt="">
+        <div class="card-topline">
+          <span class="spotlight-pill"></span>
+        </div>
       </div>
       <div class="product-body">
         <div class="product-meta">
@@ -153,13 +170,83 @@
           <span class="price-current"></span>
           <span class="price-original"></span>
         </div>
+        <div class="mini-info-row">
+          <span class="mini-info">&#x652F;&#x6301;&#x8BE2;&#x4EF7;</span>
+          <span class="mini-info">&#x53EF;&#x4EE3;&#x8D2D;</span>
+          <span class="mini-info">&#x79C1;&#x4EAB;&#x63A8;&#x8350;</span>
+        </div>
         <div class="status-row">
           <span class="status-pill"></span>
-          <a class="contact-link" href="#contact">&#x8054;&#x7CFB;&#x4E0B;&#x5355;</a>
+          <div class="card-actions">
+            <button type="button" class="ghost-btn add-cart-btn">&#x52A0;&#x5165;&#x8D2D;&#x7269;&#x8F66;</button>
+            <a class="contact-link" href="#contact">&#x8054;&#x7CFB;&#x4E0B;&#x5355;</a>
+          </div>
         </div>
       </div>
     </article>
   </template>
+
+  <div id="productModal" class="modal-shell" hidden>
+    <div class="modal-backdrop" data-close="modal"></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button id="closeModal" type="button" class="modal-close" aria-label="关闭">&#x00D7;</button>
+      <div class="modal-layout">
+        <div class="modal-image-wrap">
+          <img id="modalImage" alt="">
+        </div>
+        <div class="modal-body">
+          <div class="product-meta">
+            <span id="modalCategory" class="category-pill"></span>
+            <span id="modalTag" class="tag-pill"></span>
+          </div>
+          <h3 id="modalTitle"></h3>
+          <p id="modalDescription" class="hero-text"></p>
+          <div class="price-row modal-price-row">
+            <span id="modalPrice" class="price-current"></span>
+            <span id="modalOriginalPrice" class="price-original"></span>
+          </div>
+          <div class="mini-info-row">
+            <span id="modalStock" class="status-pill"></span>
+            <span class="mini-info">&#x652F;&#x6301;&#x8BE2;&#x4EF7;</span>
+            <span class="mini-info">&#x53EF;&#x4EE3;&#x8D2D;</span>
+          </div>
+          <div class="modal-actions">
+            <button id="modalAddCart" type="button" class="ghost-btn">&#x52A0;&#x5165;&#x8D2D;&#x7269;&#x8F66;</button>
+            <a class="primary-btn" href="#contact">&#x8054;&#x7CFB;&#x8BE2;&#x4EF7;</a>
+            <button id="modalCloseGhost" type="button" class="ghost-btn">&#x7EE7;&#x7EED;&#x901B;&#x901B;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="cartDrawer" class="drawer-shell" hidden>
+    <div class="drawer-backdrop" data-close="cart"></div>
+    <aside class="drawer-panel" aria-labelledby="cartTitle">
+      <div class="drawer-header">
+        <div>
+          <p class="eyebrow">&#x8D2D;&#x7269;&#x8F66;</p>
+          <h3 id="cartTitle">&#x5DF2;&#x9009;&#x5546;&#x54C1;</h3>
+        </div>
+        <button id="closeCart" type="button" class="modal-close" aria-label="关闭">&#x00D7;</button>
+      </div>
+      <div id="cartItems" class="cart-items"></div>
+      <div class="drawer-footer">
+        <div class="cart-summary">
+          <span>&#x5546;&#x54C1;&#x6570;&#x91CF;</span>
+          <strong id="cartSummaryCount">0</strong>
+        </div>
+        <div class="cart-summary">
+          <span>&#x53C2;&#x8003;&#x603B;&#x4EF7;</span>
+          <strong id="cartSummaryTotal">--</strong>
+        </div>
+        <div class="drawer-actions">
+          <button id="clearCart" type="button" class="ghost-btn">&#x6E05;&#x7A7A;&#x8D2D;&#x7269;&#x8F66;</button>
+          <a class="primary-btn" href="#contact">&#x8054;&#x7CFB;&#x6211;&#x786E;&#x8BA4;&#x4E0B;&#x5355;</a>
+        </div>
+      </div>
+    </aside>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>

@@ -109,6 +109,9 @@ function renderGrid(container, template, items, emptyText, options = {}) {
   items.forEach((product) => {
     const card = template.content.firstElementChild.cloneNode(true);
     const image = card.querySelector("img");
+    const spotlight = card.querySelector(".spotlight-pill");
+    card.dataset.productId = product.id;
+    card.tabIndex = 0;
 
     image.src = product.image;
     image.alt = product.name;
@@ -124,6 +127,16 @@ function renderGrid(container, template, items, emptyText, options = {}) {
 
     card.querySelector(".status-pill").textContent = product.inStock ? "\u5728\u552E\u4E2D" : "\u53EF\u4EE3\u627E / \u9700\u786E\u8BA4";
 
+    if (spotlight) {
+      spotlight.textContent = getSpotlightLabel(product);
+      spotlight.style.display = spotlight.textContent ? "inline-flex" : "none";
+    }
+
+    const addCartButton = card.querySelector(".add-cart-btn");
+    if (addCartButton) {
+      addCartButton.dataset.productId = product.id;
+    }
+
     const contactLink = card.querySelector(".contact-link");
     if (contactLink && !includeOrderLink) {
       contactLink.remove();
@@ -131,6 +144,25 @@ function renderGrid(container, template, items, emptyText, options = {}) {
 
     container.appendChild(card);
   });
+}
+
+function getSpotlightLabel(product) {
+  const normalizedTag = (product.tag || "").toLowerCase();
+
+  if (product.featured) {
+    return "\u4ECA\u65E5\u4E3B\u63A8";
+  }
+  if (normalizedTag.includes("\u65B0") || normalizedTag.includes("new")) {
+    return "\u65B0\u5230";
+  }
+  if (normalizedTag.includes("\u7206") || normalizedTag.includes("hot") || normalizedTag.includes("best")) {
+    return "\u7206\u6B3E";
+  }
+  if (product.inStock) {
+    return "\u73B0\u8D27";
+  }
+
+  return "";
 }
 
 function renderFeaturedPreview(container, product) {
