@@ -514,7 +514,7 @@ async function handleSignIn(event) {
 
   if (error) {
     console.error(error);
-    setAuthMessage("登录失败，请检查手机号和密码。", true);
+    setAuthMessage(`登录失败：${error.message || "请检查手机号和密码。"}`, true);
     return;
   }
 
@@ -556,7 +556,7 @@ async function handleSignUp() {
 
   if (error) {
     console.error(error);
-    setAuthMessage("注册失败，请确认手机号格式或稍后再试。", true);
+    setAuthMessage(`注册失败：${error.message || "请确认手机号格式或稍后再试。"}`, true);
     return;
   }
 
@@ -612,7 +612,7 @@ function buildPhoneAliasEmail(phone) {
   }
 
   const normalized = phone.replace(/^\+/, "").replace(/[^0-9]/g, "");
-  return `${normalized}@valerius.local`;
+  return `phone-${normalized}@valerius-user.example.com`;
 }
 
 function formatCustomerPhone(user) {
