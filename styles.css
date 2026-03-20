@@ -166,13 +166,13 @@ h3 {
   background: linear-gradient(135deg, #fff7d8, #f1d67a);
   border: 1px solid rgba(84, 51, 30, 0.16);
   box-shadow: 0 8px 18px rgba(76, 51, 28, 0.12);
+  overflow: hidden;
 }
 
-.brand-mark {
-  font-family: Arial, sans-serif;
-  font-weight: 800;
-  color: var(--accent-deep);
-  font-size: 1.1rem;
+.brand-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .sync-badge {
