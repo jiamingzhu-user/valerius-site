@@ -20,8 +20,17 @@ const cartItems = document.getElementById("cartItems");
 const cartSummaryCount = document.getElementById("cartSummaryCount");
 const cartSummaryTotal = document.getElementById("cartSummaryTotal");
 const clearCartButton = document.getElementById("clearCart");
+const authStatus = document.getElementById("authStatus");
+const authButton = document.getElementById("authButton");
+const logoutButton = document.getElementById("logoutButton");
+const authModal = document.getElementById("authModal");
+const closeAuthModal = document.getElementById("closeAuthModal");
+const authForm = document.getElementById("authForm");
+const signUpButton = document.getElementById("signUpButton");
+const authMessage = document.getElementById("authMessage");
 
 const CART_STORAGE_KEY = "valerius-cart";
+const CART_STORAGE_GUEST_KEY = `${CART_STORAGE_KEY}:guest`;
 
 let allProducts = [];
 let activeQuick = "all";
@@ -29,7 +38,8 @@ let activeCategory = "all";
 let activePrice = "all";
 let activeKeyword = "";
 let currentModalProductId = null;
-let cart = loadCart();
+let currentCustomer = null;
+let cart = [];
 
 initStorefront().catch((error) => {
   console.error(error);
@@ -38,6 +48,7 @@ initStorefront().catch((error) => {
 
 async function initStorefront() {
   syncBadge.textContent = "\u6BCF\u65E5\u7CBE\u9009\u66F4\u65B0";
+  await bootstrapAuth();
 
   allProducts = await loadProducts();
   const featuredProducts = allProducts.filter((product) => product.featured);
@@ -124,10 +135,20 @@ cartDrawer.addEventListener("click", (event) => {
     closeCartDrawer();
   }
 });
+authModal.addEventListener("click", (event) => {
+  if (event.target.dataset.close === "auth") {
+    closeAuthDialog();
+  }
+});
 
 closeCartButton.addEventListener("click", closeCartDrawer);
 clearCartButton.addEventListener("click", clearCart);
 cartItems.addEventListener("click", handleCartActions);
+authButton.addEventListener("click", openAuthDialog);
+closeAuthModal.addEventListener("click", closeAuthDialog);
+logoutButton.addEventListener("click", handleSignOut);
+authForm.addEventListener("submit", handleSignIn);
+signUpButton.addEventListener("click", handleSignUp);
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !productModal.hidden) {
@@ -135,6 +156,9 @@ document.addEventListener("keydown", (event) => {
   }
   if (event.key === "Escape" && !cartDrawer.hidden) {
     closeCartDrawer();
+  }
+  if (event.key === "Escape" && !authModal.hidden) {
+    closeAuthDialog();
   }
 });
 
@@ -312,7 +336,7 @@ function renderCart() {
 
   cartCount.textContent = String(totalCount);
   cartSummaryCount.textContent = String(totalCount);
-  cartSummaryTotal.textContent = totalPrice > 0 ? `USD ${totalPrice.toLocaleString()}` : "--";
+  cartSummaryTotal.textContent = totalPrice > 0 ? `¥${totalPrice.toLocaleString("zh-CN")}` : "--";
 
   if (detailedItems.length === 0) {
     cartItems.innerHTML = '<div class="empty-state">\u8D2D\u7269\u8F66\u8FD8\u662F\u7A7A\u7684\uFF0C\u53EF\u4EE5\u5148\u628A\u611F\u5174\u8DA3\u7684\u5546\u54C1\u52A0\u8FDB\u6765\u3002</div>';
@@ -343,7 +367,7 @@ function renderCart() {
 
 function loadCart() {
   try {
-    const stored = localStorage.getItem(CART_STORAGE_KEY);
+    const stored = localStorage.getItem(getCartStorageKey());
     const parsed = stored ? JSON.parse(stored) : [];
     return Array.isArray(parsed) ? parsed : [];
   } catch {
@@ -352,7 +376,7 @@ function loadCart() {
 }
 
 function saveCart() {
-  localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+  localStorage.setItem(getCartStorageKey(), JSON.stringify(cart));
 }
 
 function matchQuickFilter(product, quick) {
@@ -405,4 +429,137 @@ function matchPriceRange(priceValue, range) {
   }
 
   return true;
+}
+
+async function bootstrapAuth() {
+  if (!supabaseClient) {
+    authStatus.textContent = "未登录";
+    cart = loadCart();
+    renderCart();
+    return;
+  }
+
+  const { data, error } = await supabaseClient.auth.getSession();
+  if (error) {
+    console.error(error);
+  } else {
+    currentCustomer = data.session?.user || null;
+  }
+
+  syncCartForCurrentUser();
+  updateAuthUi();
+
+  supabaseClient.auth.onAuthStateChange((_event, session) => {
+    currentCustomer = session?.user || null;
+    syncCartForCurrentUser();
+    updateAuthUi();
+  });
+}
+
+function syncCartForCurrentUser() {
+  cart = loadCart();
+  renderCart();
+}
+
+function updateAuthUi() {
+  if (!supabaseClient) {
+    authStatus.textContent = "未登录";
+    authButton.hidden = true;
+    logoutButton.hidden = true;
+    return;
+  }
+
+  authStatus.textContent = currentCustomer
+    ? `已登录：${currentCustomer.email}`
+    : "未登录";
+  authButton.hidden = Boolean(currentCustomer);
+  logoutButton.hidden = !currentCustomer;
+}
+
+function openAuthDialog() {
+  authModal.hidden = false;
+  document.body.classList.add("modal-open");
+}
+
+function closeAuthDialog() {
+  authModal.hidden = true;
+  authMessage.textContent = "";
+  if (productModal.hidden && cartDrawer.hidden) {
+    document.body.classList.remove("modal-open");
+  }
+}
+
+async function handleSignIn(event) {
+  event.preventDefault();
+
+  if (!supabaseClient) {
+    setAuthMessage("当前未配置登录服务。", true);
+    return;
+  }
+
+  const formData = new FormData(authForm);
+  const email = formData.get("customerEmail").toString().trim();
+  const password = formData.get("customerPassword").toString();
+
+  const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  if (error) {
+    console.error(error);
+    setAuthMessage("登录失败，请检查邮箱和密码。", true);
+    return;
+  }
+
+  setAuthMessage("登录成功，购物车已切换到当前账号。", false);
+  authForm.reset();
+  closeAuthDialog();
+}
+
+async function handleSignUp() {
+  if (!supabaseClient) {
+    setAuthMessage("当前未配置登录服务。", true);
+    return;
+  }
+
+  const formData = new FormData(authForm);
+  const email = formData.get("customerEmail").toString().trim();
+  const password = formData.get("customerPassword").toString();
+
+  if (password.length < 6) {
+    setAuthMessage("密码至少需要 6 位。", true);
+    return;
+  }
+
+  const { error } = await supabaseClient.auth.signUp({ email, password });
+  if (error) {
+    console.error(error);
+    setAuthMessage("注册失败，请确认邮箱格式或稍后再试。", true);
+    return;
+  }
+
+  setAuthMessage("注册成功，请查看邮箱完成确认；若站点已关闭邮箱确认，也可直接登录。", false);
+}
+
+async function handleSignOut() {
+  if (!supabaseClient) {
+    return;
+  }
+
+  const { error } = await supabaseClient.auth.signOut();
+  if (error) {
+    console.error(error);
+    setAuthMessage("退出失败，请稍后再试。", true);
+    return;
+  }
+
+  closeCartDrawer();
+}
+
+function setAuthMessage(message, isError) {
+  authMessage.textContent = message;
+  authMessage.classList.toggle("error-text", isError);
+}
+
+function getCartStorageKey() {
+  return currentCustomer?.id
+    ? `${CART_STORAGE_KEY}:${currentCustomer.id}`
+    : CART_STORAGE_GUEST_KEY;
 }

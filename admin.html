@@ -86,6 +86,7 @@
         </div>
 
         <form id="productForm" class="product-form">
+          <input id="editingProductId" name="editingProductId" type="hidden">
           <div class="field">
             <label for="name">&#x5546;&#x54C1;&#x540D;&#x79F0;</label>
             <input id="name" name="name" type="text" placeholder="&#x4F8B;&#x5982;&#xFF1A;Prada Re-Edition Mini Bag" required>
@@ -118,6 +119,7 @@
             <label for="image">&#x5546;&#x54C1;&#x56FE;&#x7247;</label>
             <input id="image" name="image" type="file" accept="image/*">
           </div>
+          <p id="editHint" class="helper-text" hidden>&#x4E0D;&#x91CD;&#x65B0;&#x9009;&#x56FE;&#x7247;&#x65F6;&#xFF0C;&#x4F1A;&#x7EE7;&#x7EED;&#x4F7F;&#x7528;&#x539F;&#x6709;&#x5546;&#x54C1;&#x56FE;&#x3002;</p>
           <div class="field-row toggles">
             <label class="toggle">
               <input id="featured" name="featured" type="checkbox">
@@ -129,11 +131,39 @@
             </label>
           </div>
           <div class="form-actions">
-            <button type="submit" class="primary-btn">&#x4FDD;&#x5B58;&#x5546;&#x54C1;</button>
+            <button type="submit" id="submitProductButton" class="primary-btn">&#x4FDD;&#x5B58;&#x5546;&#x54C1;</button>
+            <button type="button" id="cancelEditButton" class="ghost-btn" hidden>&#x53D6;&#x6D88;&#x7F16;&#x8F91;</button>
             <button type="button" id="resetProducts" class="ghost-btn">&#x6062;&#x590D;&#x793A;&#x4F8B;&#x5546;&#x54C1;</button>
           </div>
           <p id="formMessage" class="helper-text"></p>
         </form>
+      </section>
+
+      <section class="section-block admin-panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">&#x6279;&#x91CF;&#x5BFC;&#x5165;</p>
+            <h3>&#x4E00;&#x6B21;&#x4E0A;&#x4F20;&#x591A;&#x4E2A;&#x5546;&#x54C1;</h3>
+          </div>
+          <p class="section-note">&#x5148;&#x52A0;&#x8F7D;&#x9884;&#x8BBE;&#x5546;&#x54C1;&#x6E05;&#x5355;&#xFF0C;&#x518D;&#x4E00;&#x6B21;&#x9009;&#x4E2D;&#x547D;&#x540D;&#x4E3A; 1&#x3001;2&#x3001;3... &#x7684;&#x56FE;&#x7247;&#x5373;&#x53EF;&#x6279;&#x91CF;&#x5165;&#x5E93;&#x3002;</p>
+        </div>
+
+        <div class="product-form">
+          <div class="form-actions">
+            <button type="button" id="loadPresetButton" class="ghost-btn">&#x52A0;&#x8F7D;&#x8FD9;&#x6279;&#x5546;&#x54C1;&#x9884;&#x8BBE;</button>
+            <button type="button" id="importProductsButton" class="primary-btn">&#x6279;&#x91CF;&#x4E0A;&#x4F20;&#x5E76;&#x5165;&#x5E93;</button>
+          </div>
+          <div class="field">
+            <label for="bulkImageFiles">&#x6279;&#x91CF;&#x9009;&#x62E9;&#x5546;&#x54C1;&#x56FE;&#x7247;</label>
+            <input id="bulkImageFiles" name="bulkImageFiles" type="file" accept="image/*" multiple>
+          </div>
+          <div class="field">
+            <label for="bulkCatalogInput">&#x6279;&#x91CF;&#x5546;&#x54C1;&#x6E05;&#x5355; JSON</label>
+            <textarea id="bulkCatalogInput" rows="14" placeholder='[{"imageStem":"1","name":"商品名","price":"¥199"}]'></textarea>
+          </div>
+          <p class="helper-text">&#x6BCF;&#x4E2A;&#x5546;&#x54C1;&#x8BB0;&#x5F55;&#x9700;&#x8981;&#x4E00;&#x4E2A; <code>imageStem</code>&#xFF0C;&#x4F8B;&#x5982; <code>"1"</code> &#x4F1A;&#x5339;&#x914D; <code>1.jpg</code> / <code>1.png</code> &#x8FD9;&#x79CD;&#x6587;&#x4EF6;&#x540D;&#x3002;</p>
+          <p id="bulkImportMessage" class="helper-text"></p>
+        </div>
       </section>
 
       <section class="section-block catalog">
@@ -167,6 +197,10 @@
         </div>
         <div class="status-row">
           <span class="status-pill"></span>
+        </div>
+        <div class="form-actions" style="margin-top: 16px;">
+          <button type="button" class="ghost-btn edit-product-btn">&#x7F16;&#x8F91;&#x5546;&#x54C1;</button>
+          <button type="button" class="ghost-btn delete-product-btn">&#x5220;&#x9664;&#x5546;&#x54C1;</button>
         </div>
       </div>
     </article>

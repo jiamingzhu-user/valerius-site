@@ -16,6 +16,9 @@
         </div>
         <div class="header-actions">
           <span id="syncBadge" class="sync-badge">&#x7CBE;&#x9009;&#x66F4;&#x65B0;&#x4E2D;</span>
+          <span id="authStatus" class="sync-badge">&#x672A;&#x767B;&#x5F55;</span>
+          <button id="authButton" type="button" class="ghost-btn">&#x6CE8;&#x518C; / &#x767B;&#x5F55;</button>
+          <button id="logoutButton" type="button" class="ghost-btn" hidden>&#x9000;&#x51FA;</button>
           <button id="cartButton" type="button" class="contact-chip cart-trigger">
             &#x8D2D;&#x7269;&#x8F66;
             <span id="cartCount" class="cart-count">0</span>
@@ -246,6 +249,35 @@
         </div>
       </div>
     </aside>
+  </div>
+
+  <div id="authModal" class="modal-shell" hidden>
+    <div class="modal-backdrop" data-close="auth"></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <button id="closeAuthModal" type="button" class="modal-close" aria-label="关闭">&#x00D7;</button>
+      <div class="modal-layout">
+        <div class="modal-body" style="max-width: 100%;">
+          <p class="eyebrow">VIP Account</p>
+          <h3 id="authTitle">注册或登录</h3>
+          <p class="hero-text">登录后会按账号单独保存购物车内容，避免同一台设备上的商品混在一起。</p>
+          <form id="authForm" class="product-form compact-form">
+            <div class="field">
+              <label for="customerEmail">邮箱</label>
+              <input id="customerEmail" name="customerEmail" type="email" placeholder="you@example.com" required>
+            </div>
+            <div class="field">
+              <label for="customerPassword">密码</label>
+              <input id="customerPassword" name="customerPassword" type="password" placeholder="至少 6 位密码" required>
+            </div>
+            <div class="form-actions">
+              <button id="signInButton" type="submit" class="primary-btn">登录</button>
+              <button id="signUpButton" type="button" class="ghost-btn">注册账号</button>
+            </div>
+            <p id="authMessage" class="helper-text"></p>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
