@@ -612,7 +612,7 @@ function buildPhoneAliasEmail(phone) {
   }
 
   const normalized = phone.replace(/^\+/, "").replace(/[^0-9]/g, "");
-  return `phone-${normalized}@valerius-user.example.com`;
+  return `valerius-${normalized}@gmail.com`;
 }
 
 function formatCustomerPhone(user) {
