@@ -31,6 +31,8 @@ const authMessage = document.getElementById("authMessage");
 
 const CART_STORAGE_KEY = "valerius-cart";
 const CART_STORAGE_GUEST_KEY = `${CART_STORAGE_KEY}:guest`;
+const LOCAL_PROFILE_KEY = "valerius-local-profiles";
+const CURRENT_PROFILE_KEY = "valerius-current-profile";
 
 let allProducts = [];
 let activeQuick = "all";
@@ -432,28 +434,9 @@ function matchPriceRange(priceValue, range) {
 }
 
 async function bootstrapAuth() {
-  if (!supabaseClient) {
-    authStatus.textContent = "未登录";
-    cart = loadCart();
-    renderCart();
-    return;
-  }
-
-  const { data, error } = await supabaseClient.auth.getSession();
-  if (error) {
-    console.error(error);
-  } else {
-    currentCustomer = data.session?.user || null;
-  }
-
+  currentCustomer = loadCurrentProfile();
   syncCartForCurrentUser();
   updateAuthUi();
-
-  supabaseClient.auth.onAuthStateChange((_event, session) => {
-    currentCustomer = session?.user || null;
-    syncCartForCurrentUser();
-    updateAuthUi();
-  });
 }
 
 function syncCartForCurrentUser() {
@@ -462,17 +445,11 @@ function syncCartForCurrentUser() {
 }
 
 function updateAuthUi() {
-  if (!supabaseClient) {
-    authStatus.textContent = "未登录";
-    authButton.hidden = true;
-    logoutButton.hidden = true;
-    return;
-  }
-
   authStatus.textContent = currentCustomer
-    ? `已登录：${currentCustomer.email || "VIP用户"}`
+    ? `当前身份：${currentCustomer.username || "VIP用户"}`
     : "未登录";
-  authButton.hidden = Boolean(currentCustomer);
+  authButton.hidden = false;
+  authButton.textContent = currentCustomer ? "切换身份" : "创建 / 登录";
   logoutButton.hidden = !currentCustomer;
 }
 
@@ -492,48 +469,38 @@ function closeAuthDialog() {
 async function handleSignIn(event) {
   event.preventDefault();
 
-  if (!supabaseClient) {
-    setAuthMessage("当前未配置登录服务。", true);
-    return;
-  }
-
   const formData = new FormData(authForm);
-  const email = formData.get("customerEmail").toString().trim();
+  const username = formData.get("customerUsername").toString().trim();
   const password = formData.get("customerPassword").toString();
 
-  if (!email || !password) {
-    setAuthMessage("请输入邮箱和密码。", true);
+  if (!username || !password) {
+    setAuthMessage("请输入用户名和密码。", true);
     return;
   }
 
-  const { error } = await supabaseClient.auth.signInWithPassword({
-    email,
-    password
-  });
-
-  if (error) {
-    console.error(error);
-    setAuthMessage(`登录失败：${error.message || "请检查邮箱和密码。"}`, true);
+  const profiles = loadProfiles();
+  const profile = profiles.find((item) => item.username === username);
+  if (!profile || profile.password !== password) {
+    setAuthMessage("登录失败，请检查用户名和密码。", true);
     return;
   }
 
+  currentCustomer = profile;
+  saveCurrentProfile(profile);
+  syncCartForCurrentUser();
+  updateAuthUi();
   setAuthMessage("登录成功，购物车已切换到当前账号。", false);
   authForm.reset();
   closeAuthDialog();
 }
 
 async function handleSignUp() {
-  if (!supabaseClient) {
-    setAuthMessage("当前未配置登录服务。", true);
-    return;
-  }
-
   const formData = new FormData(authForm);
-  const email = formData.get("customerEmail").toString().trim();
+  const username = formData.get("customerUsername").toString().trim();
   const password = formData.get("customerPassword").toString();
 
-  if (!email) {
-    setAuthMessage("请输入正确的邮箱。", true);
+  if (!username) {
+    setAuthMessage("请输入用户名。", true);
     return;
   }
 
@@ -542,32 +509,34 @@ async function handleSignUp() {
     return;
   }
 
-  const { error } = await supabaseClient.auth.signUp({
-    email,
-    password
-  });
-
-  if (error) {
-    console.error(error);
-    setAuthMessage(`注册失败：${error.message || "请确认邮箱格式或稍后再试。"}`, true);
+  const profiles = loadProfiles();
+  if (profiles.some((item) => item.username === username)) {
+    setAuthMessage("这个用户名已经存在，请换一个。", true);
     return;
   }
 
-  setAuthMessage("注册成功，现在可以直接用邮箱和密码登录。", false);
+  const profile = {
+    id: crypto.randomUUID(),
+    username,
+    password
+  };
+
+  profiles.push(profile);
+  saveProfiles(profiles);
+  currentCustomer = profile;
+  saveCurrentProfile(profile);
+  syncCartForCurrentUser();
+  updateAuthUi();
+  setAuthMessage("创建成功，已自动切换到这个购物身份。", false);
+  authForm.reset();
+  closeAuthDialog();
 }
 
 async function handleSignOut() {
-  if (!supabaseClient) {
-    return;
-  }
-
-  const { error } = await supabaseClient.auth.signOut();
-  if (error) {
-    console.error(error);
-    setAuthMessage("退出失败，请稍后再试。", true);
-    return;
-  }
-
+  currentCustomer = null;
+  localStorage.removeItem(CURRENT_PROFILE_KEY);
+  syncCartForCurrentUser();
+  updateAuthUi();
   closeCartDrawer();
 }
 
@@ -580,4 +549,31 @@ function getCartStorageKey() {
   return currentCustomer?.id
     ? `${CART_STORAGE_KEY}:${currentCustomer.id}`
     : CART_STORAGE_GUEST_KEY;
+}
+
+function loadProfiles() {
+  try {
+    const stored = localStorage.getItem(LOCAL_PROFILE_KEY);
+    const parsed = stored ? JSON.parse(stored) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveProfiles(profiles) {
+  localStorage.setItem(LOCAL_PROFILE_KEY, JSON.stringify(profiles));
+}
+
+function loadCurrentProfile() {
+  try {
+    const stored = localStorage.getItem(CURRENT_PROFILE_KEY);
+    return stored ? JSON.parse(stored) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveCurrentProfile(profile) {
+  localStorage.setItem(CURRENT_PROFILE_KEY, JSON.stringify(profile));
 }
