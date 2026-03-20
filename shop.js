@@ -470,7 +470,7 @@ function updateAuthUi() {
   }
 
   authStatus.textContent = currentCustomer
-    ? `已登录：${currentCustomer.email}`
+    ? `已登录：${currentCustomer.phone || currentCustomer.email || "VIP用户"}`
     : "未登录";
   authButton.hidden = Boolean(currentCustomer);
   logoutButton.hidden = !currentCustomer;
@@ -498,13 +498,22 @@ async function handleSignIn(event) {
   }
 
   const formData = new FormData(authForm);
-  const email = formData.get("customerEmail").toString().trim();
+  const phone = normalizePhone(formData.get("customerPhone").toString());
   const password = formData.get("customerPassword").toString();
 
-  const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  if (!phone || !password) {
+    setAuthMessage("请输入手机号和密码。", true);
+    return;
+  }
+
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    phone,
+    password
+  });
+
   if (error) {
     console.error(error);
-    setAuthMessage("登录失败，请检查邮箱和密码。", true);
+    setAuthMessage("登录失败，请检查手机号和密码。", true);
     return;
   }
 
@@ -520,22 +529,31 @@ async function handleSignUp() {
   }
 
   const formData = new FormData(authForm);
-  const email = formData.get("customerEmail").toString().trim();
+  const phone = normalizePhone(formData.get("customerPhone").toString());
   const password = formData.get("customerPassword").toString();
+
+  if (!phone) {
+    setAuthMessage("请输入正确的手机号。", true);
+    return;
+  }
 
   if (password.length < 6) {
     setAuthMessage("密码至少需要 6 位。", true);
     return;
   }
 
-  const { error } = await supabaseClient.auth.signUp({ email, password });
+  const { error } = await supabaseClient.auth.signUp({
+    phone,
+    password
+  });
+
   if (error) {
     console.error(error);
-    setAuthMessage("注册失败，请确认邮箱格式或稍后再试。", true);
+    setAuthMessage("注册失败，请确认手机号格式或稍后再试。", true);
     return;
   }
 
-  setAuthMessage("注册成功，请查看邮箱完成确认；若站点已关闭邮箱确认，也可直接登录。", false);
+  setAuthMessage("注册成功，现在可以直接用手机号和密码登录。", false);
 }
 
 async function handleSignOut() {
@@ -562,4 +580,21 @@ function getCartStorageKey() {
   return currentCustomer?.id
     ? `${CART_STORAGE_KEY}:${currentCustomer.id}`
     : CART_STORAGE_GUEST_KEY;
+}
+
+function normalizePhone(input) {
+  const digits = String(input || "").replace(/\s+/g, "");
+  if (!digits) {
+    return "";
+  }
+
+  if (digits.startsWith("+")) {
+    return digits;
+  }
+
+  if (/^1\d{10}$/.test(digits)) {
+    return `+86${digits}`;
+  }
+
+  return digits;
 }

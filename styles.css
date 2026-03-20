@@ -22,7 +22,7 @@ html {
 
 body {
   margin: 0;
-  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-family: Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
   color: var(--text);
   background:
     radial-gradient(circle at top right, rgba(230, 194, 167, 0.55), transparent 26%),
@@ -95,7 +95,7 @@ h2,
 h3,
 h4 {
   margin: 0;
-  font-family: Georgia, "Times New Roman", "Songti SC", serif;
+  font-family: Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
   font-weight: 600;
 }
 
@@ -154,6 +154,25 @@ h3 {
 
 .header-actions {
   align-items: center;
+}
+
+.brand-badge {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #fff7d8, #f1d67a);
+  border: 1px solid rgba(84, 51, 30, 0.16);
+  box-shadow: 0 8px 18px rgba(76, 51, 28, 0.12);
+}
+
+.brand-mark {
+  font-family: Arial, sans-serif;
+  font-weight: 800;
+  color: var(--accent-deep);
+  font-size: 1.1rem;
 }
 
 .sync-badge {
