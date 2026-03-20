@@ -470,7 +470,7 @@ function updateAuthUi() {
   }
 
   authStatus.textContent = currentCustomer
-    ? `已登录：${formatCustomerPhone(currentCustomer) || currentCustomer.email || "VIP用户"}`
+    ? `已登录：${currentCustomer.email || "VIP用户"}`
     : "未登录";
   authButton.hidden = Boolean(currentCustomer);
   logoutButton.hidden = !currentCustomer;
@@ -498,12 +498,11 @@ async function handleSignIn(event) {
   }
 
   const formData = new FormData(authForm);
-  const phone = normalizePhone(formData.get("customerPhone").toString());
+  const email = formData.get("customerEmail").toString().trim();
   const password = formData.get("customerPassword").toString();
-  const email = buildPhoneAliasEmail(phone);
 
-  if (!phone || !password) {
-    setAuthMessage("请输入手机号和密码。", true);
+  if (!email || !password) {
+    setAuthMessage("请输入邮箱和密码。", true);
     return;
   }
 
@@ -514,7 +513,7 @@ async function handleSignIn(event) {
 
   if (error) {
     console.error(error);
-    setAuthMessage(`登录失败：${error.message || "请检查手机号和密码。"}`, true);
+    setAuthMessage(`登录失败：${error.message || "请检查邮箱和密码。"}`, true);
     return;
   }
 
@@ -530,12 +529,11 @@ async function handleSignUp() {
   }
 
   const formData = new FormData(authForm);
-  const phone = normalizePhone(formData.get("customerPhone").toString());
+  const email = formData.get("customerEmail").toString().trim();
   const password = formData.get("customerPassword").toString();
-  const email = buildPhoneAliasEmail(phone);
 
-  if (!phone) {
-    setAuthMessage("请输入正确的手机号。", true);
+  if (!email) {
+    setAuthMessage("请输入正确的邮箱。", true);
     return;
   }
 
@@ -546,21 +544,16 @@ async function handleSignUp() {
 
   const { error } = await supabaseClient.auth.signUp({
     email,
-    password,
-    options: {
-      data: {
-        phone
-      }
-    }
+    password
   });
 
   if (error) {
     console.error(error);
-    setAuthMessage(`注册失败：${error.message || "请确认手机号格式或稍后再试。"}`, true);
+    setAuthMessage(`注册失败：${error.message || "请确认邮箱格式或稍后再试。"}`, true);
     return;
   }
 
-  setAuthMessage("注册成功，现在可以直接用手机号和密码登录。", false);
+  setAuthMessage("注册成功，现在可以直接用邮箱和密码登录。", false);
 }
 
 async function handleSignOut() {
@@ -587,45 +580,4 @@ function getCartStorageKey() {
   return currentCustomer?.id
     ? `${CART_STORAGE_KEY}:${currentCustomer.id}`
     : CART_STORAGE_GUEST_KEY;
-}
-
-function normalizePhone(input) {
-  const digits = String(input || "").replace(/\s+/g, "");
-  if (!digits) {
-    return "";
-  }
-
-  if (digits.startsWith("+")) {
-    return digits;
-  }
-
-  if (/^1\d{10}$/.test(digits)) {
-    return `+86${digits}`;
-  }
-
-  return digits;
-}
-
-function buildPhoneAliasEmail(phone) {
-  if (!phone) {
-    return "";
-  }
-
-  const normalized = phone.replace(/^\+/, "").replace(/[^0-9]/g, "");
-  return `valerius-${normalized}@gmail.com`;
-}
-
-function formatCustomerPhone(user) {
-  const savedPhone = user?.user_metadata?.phone || user?.phone || "";
-  const normalized = String(savedPhone).trim();
-
-  if (!normalized) {
-    return "";
-  }
-
-  if (/^\+861\d{10}$/.test(normalized)) {
-    return normalized.replace(/^\+86/, "");
-  }
-
-  return normalized;
 }
