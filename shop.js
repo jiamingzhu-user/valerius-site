@@ -470,7 +470,7 @@ function updateAuthUi() {
   }
 
   authStatus.textContent = currentCustomer
-    ? `已登录：${currentCustomer.phone || currentCustomer.email || "VIP用户"}`
+    ? `已登录：${formatCustomerPhone(currentCustomer) || currentCustomer.email || "VIP用户"}`
     : "未登录";
   authButton.hidden = Boolean(currentCustomer);
   logoutButton.hidden = !currentCustomer;
@@ -500,6 +500,7 @@ async function handleSignIn(event) {
   const formData = new FormData(authForm);
   const phone = normalizePhone(formData.get("customerPhone").toString());
   const password = formData.get("customerPassword").toString();
+  const email = buildPhoneAliasEmail(phone);
 
   if (!phone || !password) {
     setAuthMessage("请输入手机号和密码。", true);
@@ -507,7 +508,7 @@ async function handleSignIn(event) {
   }
 
   const { error } = await supabaseClient.auth.signInWithPassword({
-    phone,
+    email,
     password
   });
 
@@ -531,6 +532,7 @@ async function handleSignUp() {
   const formData = new FormData(authForm);
   const phone = normalizePhone(formData.get("customerPhone").toString());
   const password = formData.get("customerPassword").toString();
+  const email = buildPhoneAliasEmail(phone);
 
   if (!phone) {
     setAuthMessage("请输入正确的手机号。", true);
@@ -543,8 +545,13 @@ async function handleSignUp() {
   }
 
   const { error } = await supabaseClient.auth.signUp({
-    phone,
-    password
+    email,
+    password,
+    options: {
+      data: {
+        phone
+      }
+    }
   });
 
   if (error) {
@@ -597,4 +604,28 @@ function normalizePhone(input) {
   }
 
   return digits;
+}
+
+function buildPhoneAliasEmail(phone) {
+  if (!phone) {
+    return "";
+  }
+
+  const normalized = phone.replace(/^\+/, "").replace(/[^0-9]/g, "");
+  return `${normalized}@valerius.local`;
+}
+
+function formatCustomerPhone(user) {
+  const savedPhone = user?.user_metadata?.phone || user?.phone || "";
+  const normalized = String(savedPhone).trim();
+
+  if (!normalized) {
+    return "";
+  }
+
+  if (/^\+861\d{10}$/.test(normalized)) {
+    return normalized.replace(/^\+86/, "");
+  }
+
+  return normalized;
 }
